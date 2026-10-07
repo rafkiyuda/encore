@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand — oranye dominan */
+  --color-primary: #F97316;        /* aksen, ikon, latar section */
+  --color-primary-dark: #C2410C;   /* tombol (teks putih) & teks oranye di atas putih */
+  --color-primary-light: #FFEDD5;
+  --color-cream: #FFF7ED;
+
+  /* Teks & latar */
+  --color-ink: #1C1917;
+  --color-ink-soft: #57534E;
+  --color-surface: #FAFAF9;
+  --color-product: #1F2421;        /* elemen produk & footer */
+
+  /* Aksen keberlanjutan (ikon/latar). Untuk teks kecil pakai eco-dark agar kontras ≥ 4.5:1 */
+  --color-eco: #16A34A;
+  --color-eco-dark: #15803D;
+  --color-eco-light: #DCFCE7;
+
+  --radius-card: 1rem;
+  --shadow-soft: 0 1px 2px rgb(28 25 23 / 0.04), 0 8px 24px -8px rgb(28 25 23 / 0.10);
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    @apply bg-white font-sans text-base leading-relaxed text-ink antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 { @apply font-extrabold tracking-tight text-ink; text-wrap: balance; }
+  :focus-visible { outline: 3px solid var(--color-primary-dark); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+}
+
+@utility container-page { @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8; }
+@utility section { @apply py-14 sm:py-20; }
+@utility eyebrow { @apply mb-2 inline-flex items-center gap-1.5 rounded-full bg-primary-light px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-dark; }
+@utility h2 { @apply text-2xl sm:text-3xl lg:text-4xl; }
+@utility lead { @apply mt-3 text-ink-soft sm:text-lg; }
+@utility btn { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-base font-bold transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50; }
+@utility btn-primary { @apply btn bg-primary-dark text-white shadow-[0_6px_16px_-6px_rgb(194_65_12/0.6)] hover:bg-[#9A3412]; }
+@utility btn-outline { @apply btn border-2 border-primary-dark bg-white text-primary-dark hover:bg-cream; }
+@utility btn-ghost { @apply btn text-ink-soft hover:bg-surface; }
+@utility btn-dark { @apply btn bg-product text-white hover:bg-black; }
+@utility card { @apply rounded-card border border-stone-200/80 bg-white shadow-soft; }
+@utility badge-placeholder { @apply inline-flex items-center gap-1 rounded-full border border-dashed border-stone-400 bg-white px-2 py-0.5 text-[11px] font-semibold text-ink-soft; }
+@utility badge-eco { @apply inline-flex items-center gap-1 rounded-full bg-eco-light px-2.5 py-0.5 text-xs font-bold text-eco-dark; }
+@utility field-label { @apply mb-1.5 block text-sm font-bold text-ink; }
+@utility field { @apply block scroll-mt-28 min-h-11 w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-base text-ink placeholder:text-stone-400 focus:border-primary-dark focus:ring-2 focus:ring-primary/30 focus:outline-none aria-[invalid=true]:border-red-600; }
+@utility field-error { @apply mt-1.5 text-sm font-medium text-red-700; }
+@utility field-hint { @apply mt-1.5 text-sm text-ink-soft; }
+
+@keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+.animate-float { animation: float 5s ease-in-out infinite; }
