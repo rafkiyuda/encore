@@ -4,7 +4,7 @@ import { estimateCost, getPackage, isValidIndoPhone, normalizePhone, rupiah } fr
 export const STORAGE_KEY = 'encore-booking'
 export const LAST_ORDER_KEY = 'encore-last-order'
 
-export const STEPS = ['Tipe pelanggan', 'Pilih paket', 'Jadwal & lokasi', 'Data pemesan', 'Ringkasan', 'Konfirmasi']
+export const STEPS = ['Tipe pelanggan', 'Pilih paket', 'Jadwal & lokasi', 'Data pemesan', 'Ringkasan', 'Bayar & kirim']
 
 export const emptyBooking = {
   step: 0,
@@ -68,7 +68,7 @@ export function validateStep(step, b) {
     if (!b.businessName.trim()) e.businessName = 'Isi nama usaha / event / perusahaan.'
   }
   if (step === 5) {
-    if (!b.agree) e.agree = 'Centang persetujuan untuk melanjutkan.'
+    if (!b.agree) e.agree = pkg?.price != null ? 'Centang setelah kamu membayar via QRIS.' : 'Centang persetujuan untuk melanjutkan.'
   }
   return e
 }
@@ -110,8 +110,8 @@ export function buildWhatsAppText(b) {
   const line = '--------------------'
   const fmt = (r) => r.map(([k, v]) => `*${k}:* ${v}`).join('\n')
   const costLine = cost
-    ? `*Estimasi biaya:* ${rupiah(cost.total)} (${rupiah(cost.perUnit)} x ${cost.qty} ${cost.unit})\n_Estimasi dari harga contoh, final dikonfirmasi tim Encore._`
-    : '*Estimasi biaya:* Mohon dikirimkan penawaran.'
+    ? `*Total bayar:* ${rupiah(cost.total)} (${rupiah(cost.perUnit)} x ${cost.qty} ${cost.unit})\n*Pembayaran:* Sudah dibayar via QRIS — bukti bayar saya lampirkan.`
+    : '*Biaya:* Mohon dikirimkan penawaran.'
   return [
     `Halo Encore, saya ingin memesan.`,
     '',
@@ -123,6 +123,8 @@ export function buildWhatsAppText(b) {
     line,
     costLine,
     '',
-    'Mohon konfirmasi dan kirimkan QRIS untuk pembayaran. Terima kasih!',
+    cost
+      ? 'Mohon pembayaran dicek dan pesanan dikonfirmasi. Terima kasih!'
+      : 'Mohon dikirimkan penawaran beserta QRIS untuk pembayaran. Terima kasih!',
   ].join('\n')
 }

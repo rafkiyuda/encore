@@ -29,6 +29,17 @@ Deploy: unggah `dist/` ke Netlify/Vercel. File `public/_redirects` (Netlify) dan
 | FAQ (`home: true` = tampil di beranda) | `faqs` |
 | Menu navigasi | `navLinks` |
 | Pose maskot per lokasi | `mascotPoses` (nomor 1–20) |
+| **QRIS pembayaran** | `payment` (lihat di bawah) |
+
+## Pembayaran QRIS
+
+Di langkah terakhir pemesanan pelanggan langsung scan QRIS, lalu mengirim bukti bayar via WhatsApp. Atur di `payment` (config.js), pilih salah satu:
+
+1. **`qrisPayload`** (disarankan) — isi teks QRIS statis merchant (hasil scan QR statis, diawali `000201…`, diakhiri `6304XXXX`). Situs membuat QR baru dengan **nominal otomatis** sesuai total pesanan (tag 54 + CRC dihitung ulang di browser). Uji dulu sekali dengan nominal kecil.
+2. **`qrisImage`** — taruh gambar QRIS statis di `public/brand/qris.png`; pelanggan mengetik nominal sendiri.
+
+Isi juga `merchantName` dan `nmid` sesuai yang tertera di QRIS. Pelanggan yang memesan dari HP bisa menekan **Simpan gambar QRIS** lalu mengunggahnya dari galeri di aplikasi pembayaran.
+Catatan: tanpa backend, pembayaran tidak terverifikasi otomatis — tim mengecek mutasi merchant berdasarkan bukti bayar + nomor pesanan. Layanan "Hubungi kami" (event/CSR) tetap lewat penawaran dulu.
 
 ## Aset brand — `public/brand/`
 
@@ -46,5 +57,6 @@ Deep-link pemesanan: `/pesan?paket=fnb-ringan`, `/pesan?paket=fnb-berat&modul=4`
 ## Catatan
 
 - Semua harga, angka dampak, hub, tim, dan logo mitra adalah **contoh/placeholder** dan diberi label di UI.
+- Pembayaran: QRIS di halaman pemesanan (lihat bagian Pembayaran QRIS); tidak ada payment gateway.
 - Draft pesanan disimpan di `localStorage` (dibungkus try/catch) sehingga tidak hilang saat refresh.
 - Estimator: `modul = ceil(Σ(watt × jam × jumlah) × 1,2 ÷ kapasitas modul)`; peringatan muncul jika total daya sesaat > batas inverter.

@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { MessageCircle, QrCode } from 'lucide-react'
 import { mascot } from '../data/config'
-import { storage } from '../lib/utils'
+import { rupiah, storage } from '../lib/utils'
 import { LAST_ORDER_KEY } from '../lib/booking'
 import BrandImage from '../components/BrandImage'
 
@@ -35,7 +35,9 @@ export default function BookingSuccess() {
           {order.packageName && <p className="mt-1 text-sm text-ink-soft">{order.packageName}</p>}
           <p className="mt-4 flex gap-3 rounded-xl bg-cream p-3 text-sm">
             <QrCode className="size-5 shrink-0 text-primary-dark" aria-hidden="true" />
-            Pembayaran via QRIS akan dikirim setelah pesanan dikonfirmasi.
+            {order.total != null
+              ? `Pembayaran ${rupiah(order.total)} via QRIS sedang kami verifikasi. Pastikan screenshot bukti bayar sudah terkirim di WhatsApp.`
+              : 'QRIS untuk pembayaran akan dikirim setelah penawaran disepakati.'}
           </p>
         </div>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">

@@ -9,6 +9,7 @@ import {
 } from '../lib/booking'
 import Icon from './Icon'
 import Estimator from './Estimator'
+import QrisPayment from './QrisPayment'
 
 function Field({ id, label, error, hint, children }) {
   return (
@@ -164,7 +165,7 @@ export default function BookingForm() {
       return
     }
     // link wa.me terbuka di tab baru (default anchor), lalu tampilkan halaman sukses
-    const order = { orderId: b.orderId, waUrl, name: b.name, packageName: pkg?.name }
+    const order = { orderId: b.orderId, waUrl, name: b.name, packageName: pkg?.name, total: summary?.cost?.total ?? null }
     storage.set(LAST_ORDER_KEY, order)
     storage.remove(STORAGE_KEY)
     setTimeout(() => navigate('/pesan/sukses', { state: order }), 50)
@@ -192,7 +193,7 @@ export default function BookingForm() {
         }}
       >
         <h2 ref={headingRef} tabIndex={-1} className="scroll-mt-24 text-2xl outline-none sm:text-3xl">
-          {['Kamu pelanggan tipe apa?', 'Pilih layanan / paket', 'Kapan dan di mana?', 'Data pemesan', 'Cek ringkasan pesanan', 'Kirim pesanan'][b.step]}
+          {['Kamu pelanggan tipe apa?', 'Pilih layanan / paket', 'Kapan dan di mana?', 'Data pemesan', 'Cek ringkasan pesanan', 'Bayar & kirim pesanan'][b.step]}
         </h2>
 
         <div className="mt-5">
@@ -353,7 +354,7 @@ export default function BookingForm() {
           )}
 
           {/* STEP 5 — ringkasan */}
-          {b.step >= 4 && summary && (
+          {b.step === 4 && summary && (
             <div className="grid gap-4">
               <div className="card divide-y divide-stone-200">
                 {[['Pesanan', summary.rows, 2], ['Pemesan', summary.contact, 3]].map(([title, rows, goto]) => (
@@ -377,12 +378,12 @@ export default function BookingForm() {
                   </div>
                 ))}
                 <div className="bg-cream p-4 sm:p-5">
-                  <p className="text-sm text-ink-soft">Estimasi biaya</p>
+                  <p className="text-sm text-ink-soft">Total bayar</p>
                   {summary.cost ? (
                     <>
                       <p className="text-3xl font-extrabold">{rupiah(summary.cost.total)}</p>
                       <p className="text-sm text-ink-soft">
-                        {rupiah(summary.cost.perUnit)} × {summary.cost.qty} {summary.cost.unit} · <strong>estimasi</strong> dari harga contoh
+                        {rupiah(summary.cost.perUnit)} × {summary.cost.qty} {summary.cost.unit} · harga contoh, dapat berubah
                       </p>
                     </>
                   ) : (
@@ -390,16 +391,21 @@ export default function BookingForm() {
                   )}
                 </div>
               </div>
-              <p className="flex gap-3 rounded-xl bg-product p-4 text-sm text-stone-200">
-                <QrCode className="size-5 shrink-0 text-primary" aria-hidden="true" />
-                Pembayaran via QRIS akan dikirim setelah pesanan dikonfirmasi oleh tim Encore. Tidak ada pembayaran di situs ini.
-              </p>
+              {b.step === 4 && (
+                <p className="flex gap-3 rounded-xl bg-product p-4 text-sm text-stone-200">
+                  <QrCode className="size-5 shrink-0 text-primary" aria-hidden="true" />
+                  {summary.cost
+                    ? 'Di langkah berikutnya kamu bisa langsung bayar dengan scan QRIS.'
+                    : 'Layanan ini perlu penawaran dulu. QRIS dikirim tim Encore lewat WhatsApp setelah harga disepakati.'}
+                </p>
+              )}
             </div>
           )}
 
-          {/* STEP 6 — konfirmasi */}
+          {/* STEP 6 — bayar & kirim */}
           {b.step === 5 && (
             <div className="mt-4 grid gap-4">
+              {summary?.cost && <QrisPayment amount={summary.cost.total} orderId={b.orderId} />}
               <div className="card p-4 sm:p-5">
                 <p className="text-sm text-ink-soft">Nomor pesanan</p>
                 <p className="text-xl font-extrabold tracking-wide">{b.orderId}</p>
@@ -417,7 +423,11 @@ export default function BookingForm() {
                   aria-invalid={errors.agree ? true : undefined}
                   aria-describedby={errors.agree ? 'agree-error' : undefined}
                 />
-                <span className="text-sm">Data sudah benar dan saya setuju dihubungi tim Encore melalui WhatsApp untuk konfirmasi pesanan.</span>
+                <span className="text-sm">
+                  {summary?.cost
+                    ? <>Saya <strong>sudah membayar {rupiah(summary.cost.total)}</strong> via QRIS dan akan melampirkan bukti bayar di WhatsApp.</>
+                    : 'Data sudah benar dan saya setuju dihubungi tim Encore melalui WhatsApp untuk penawaran.'}
+                </span>
               </label>
               {errors.agree && <p id="agree-error" className="field-error -mt-2">{errors.agree}</p>}
             </div>
@@ -438,7 +448,7 @@ export default function BookingForm() {
               </button>
             ) : (
               <a href={waUrl} target="_blank" rel="noreferrer" onClick={submit} className="btn-primary flex-[2] sm:ml-auto sm:flex-none">
-                <Send className="size-5" aria-hidden="true" /> Kirim via WhatsApp
+                <Send className="size-5" aria-hidden="true" /> {summary?.cost ? 'Kirim bukti bayar' : 'Kirim via WhatsApp'}
               </a>
             )}
           </div>

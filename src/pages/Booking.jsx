@@ -10,7 +10,7 @@ export default function Booking() {
           <h1 className="text-3xl sm:text-4xl">Pesan listrik Encore</h1>
           <p className="mt-2 flex items-center gap-2 text-sm text-ink-soft">
             <ShieldCheck className="size-4 shrink-0 text-eco" aria-hidden="true" />
-            Data tersimpan otomatis di perangkatmu. Pembayaran via QRIS setelah pesanan dikonfirmasi.
+            Data tersimpan otomatis di perangkatmu. Bayar langsung dengan scan QRIS di langkah terakhir.
           </p>
         </div>
         <BookingForm />
