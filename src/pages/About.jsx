@@ -1,10 +1,9 @@
-import { BatteryCharging, BrainCircuit, Cpu, Eye, FireExtinguisher, Heart, Leaf, Recycle, ShieldCheck, Sun, Target, Thermometer, Users } from 'lucide-react'
-import { business, logo, mascot } from '../data/config'
+import { BatteryCharging, BrainCircuit, Cpu, Eye, FireExtinguisher, Heart, Leaf, Recycle, ShieldCheck, Sun, Target, Thermometer } from 'lucide-react'
+import { business, logo, mascot, team } from '../data/config'
 import BrandImage from '../components/BrandImage'
 import PageHeader from '../components/PageHeader'
 import SectionHeading from '../components/SectionHeading'
 import CtaBanner from '../components/CtaBanner'
-import Placeholder from '../components/Placeholder'
 
 const mission = [
   'Menyediakan listrik yang aman, bersih, dan terjangkau untuk PKL, UMKM, dan event.',
@@ -32,13 +31,6 @@ const safety = [
   { icon: BrainCircuit, text: 'Deteksi anomali berbasis AI untuk menandai modul yang perlu diperiksa.' },
   { icon: FireExtinguisher, text: 'Pemadam otomatis terpasang di setiap rak Mitra Hub.' },
   { icon: ShieldCheck, text: 'Kimia LFP yang lebih stabil dibanding jenis baterai lithium lain.' },
-]
-
-const team = [
-  { name: '[Nama Anggota]', role: 'CEO / Business Lead' },
-  { name: '[Nama Anggota]', role: 'CTO / Hardware & IoT' },
-  { name: '[Nama Anggota]', role: 'Head of Operations' },
-  { name: '[Nama Anggota]', role: 'Data & AI Lead' },
 ]
 
 export default function About() {
@@ -152,17 +144,20 @@ export default function About() {
       <section className="section">
         <div className="container-page">
           <div className="flex flex-wrap items-end justify-between gap-3">
-            <SectionHeading eyebrow="Tim" title={`Tim ${business.team}`} />
-            <Placeholder>Data tim menyusul</Placeholder>
+            <SectionHeading eyebrow="Tim" title={`Tim ${business.team}`} lead="Tim pengusul Encore." />
           </div>
-          <ul className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {team.map((m, i) => (
-              <li key={i} className="card p-5 text-center">
-                <span className="mx-auto grid size-20 place-items-center rounded-full bg-primary-light text-2xl font-extrabold text-primary-dark">
-                  <Users className="size-8" aria-hidden="true" />
-                </span>
-                <p className="mt-3 font-bold">{m.name}</p>
-                <p className="text-sm text-ink-soft">{m.role}</p>
+          <ul className="mx-auto mt-8 grid max-w-3xl grid-cols-3 gap-3 sm:gap-6">
+            {team.map((m) => (
+              <li key={m.name} className="card px-2 py-5 text-center sm:p-6">
+                {m.photo ? (
+                  <img src={m.photo} alt={m.name} loading="lazy" className="mx-auto size-16 rounded-full object-cover ring-4 ring-primary-light sm:size-24" />
+                ) : (
+                  <span aria-hidden="true" className="mx-auto grid size-16 place-items-center rounded-full bg-primary-light text-2xl font-extrabold text-primary-dark ring-4 ring-cream sm:size-24 sm:text-3xl">
+                    {m.name.charAt(0)}
+                  </span>
+                )}
+                <p className="mt-3 font-bold sm:text-lg">{m.name}</p>
+                <p className="text-xs text-ink-soft sm:text-sm">{m.role || `Tim ${business.team}`}</p>
               </li>
             ))}
           </ul>

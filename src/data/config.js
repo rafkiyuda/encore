@@ -25,6 +25,14 @@ export const business = {
   instagram: '@encore.example', // [PLACEHOLDER]
 }
 
+// ---------- Tim OneShot ----------
+// role: isi jabatan bila sudah ditentukan. photo: path foto (mis. '/brand/team/melvin.webp'); kosong = avatar inisial.
+export const team = [
+  { name: 'Rafki', role: '', photo: '' },
+  { name: 'Melvin', role: '', photo: '' },
+  { name: 'Marco', role: '', photo: '' },
+]
+
 // ---------- Aset brand (ganti file di public/brand/ tanpa ubah kode) ----------
 // Pemetaan pose maskot (nomor = urutan grid sprite, kiri→kanan, atas→bawah)
 export const mascotPoses = {
@@ -52,6 +60,19 @@ export const logo = {
   horizontal: '/brand/logo-horizontal.png', // navbar
   horizontalWhite: '/brand/logo-horizontal-white.png', // footer gelap
   mark: '/brand/logo-mark.png', // ikon saja
+}
+
+// ---------- Pembayaran QRIS ----------
+// Pilih SALAH SATU cara:
+// 1) qrisPayload: isi teks QRIS statis milik merchant (hasil scan QR statis, diawali "000201...").
+//    Situs akan membuat QR baru dengan NOMINAL OTOMATIS sesuai total pesanan.
+// 2) qrisImage: taruh gambar QRIS statis di public/brand/qris.png. Pelanggan mengetik nominal sendiri.
+// Jika keduanya kosong/tidak ada → tampil kotak placeholder.
+export const payment = {
+  qrisPayload: '', // [ISI] contoh: '00020101021126...6304ABCD'
+  qrisImage: '/brand/qris.png', // [ISI] gambar QRIS statis
+  merchantName: 'ENCORE', // [PLACEHOLDER] nama merchant sesuai QRIS
+  nmid: 'ID10XXXXXXXXXXX', // [PLACEHOLDER] NMID tertera di QRIS
 }
 
 // ---------- Spesifikasi modul & estimator ----------
@@ -210,7 +231,7 @@ export const faqs = [
   },
   {
     q: 'Bagaimana cara bayar?',
-    a: 'Pembayaran via QRIS. Setelah pesanan dikonfirmasi tim kami melalui WhatsApp, kode QRIS akan dikirimkan. Tersedia pilihan sewa harian atau langganan bulanan.',
+    a: 'Langsung scan QRIS di langkah terakhir pemesanan — bisa dengan e-wallet atau m-banking apa pun yang mendukung QRIS. Kalau memesan dari HP, simpan gambar QRIS lalu unggah di aplikasi pembayaranmu. Setelah bayar, kirim bukti lewat WhatsApp. Untuk layanan event/CSR, QRIS dikirim setelah penawaran disepakati.',
     home: true,
   },
   {
